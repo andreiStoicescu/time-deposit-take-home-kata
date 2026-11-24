@@ -1,0 +1,37 @@
+name: time-deposit
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: timedeposit
+      POSTGRES_USER: timedeposit
+      POSTGRES_PASSWORD: timedeposit
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "timedeposit", "-d", "timedeposit"]
+      interval: 5s
+      start_period: 10s
+
+  app:
+    build: ./java
+    stop_grace_period: 30s
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/timedeposit
+      SPRING_DATASOURCE_USERNAME: timedeposit
+      SPRING_DATASOURCE_PASSWORD: timedeposit
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://localhost:8080/actuator/health/readiness || exit 1"]
+      interval: 5s
+      start_period: 30s
+
+volumes:
+  postgres-data:

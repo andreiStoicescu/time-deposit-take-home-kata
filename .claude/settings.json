@@ -1,0 +1,21 @@
+{
+  "enabledPlugins": {
+    "spring-boot-template@piomin": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "comprehensive-review@claude-code-workflows": true
+  },
+  "extraKnownMarketplaces": {
+    "piomin": {
+      "source": {
+        "source": "github",
+        "repo": "piomin/claude-ai-spring-boot"
+      }
+    },
+    "claude-code-workflows": {
+      "source": {
+        "source": "github",
+        "repo": "wshobson/agents"
+      }
+    }
+  }
+}
