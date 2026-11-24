@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.assertj.core.api.Assertions.tuple;
 
 class TimeDepositCalculatorTest {
@@ -54,6 +55,12 @@ class TimeDepositCalculatorTest {
     @ValueSource(strings = {"gold", "", "Basic", "PREMIUM"})
     void unknownOrDifferentlyCasedPlanTypeEarnsNoInterest(String planType) {
         assertThat(balanceAfterUpdate(planType, 1200.00, 100)).isEqualTo(1200.00);
+    }
+
+    @Test
+    void nullPlanTypeIsIgnoredUpTo30DaysAndThrowsFrom31() {
+        assertThat(balanceAfterUpdate(null, 1200.00, 30)).isEqualTo(1200.00);
+        assertThatNullPointerException().isThrownBy(() -> balanceAfterUpdate(null, 1200.00, 31));
     }
 
     @ParameterizedTest(name = "{0} {1} at {2} days becomes {3}")
