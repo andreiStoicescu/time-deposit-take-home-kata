@@ -19,6 +19,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TimeDeposit'
+  /time-deposits/balance-updates:
+    post:
+      tags: [time-deposits]
+      operationId: updateAllBalances
+      summary: Add one month of interest to every time deposit
+      description: Each call adds another month of interest, so the operation is not idempotent.
+      responses:
+        '204':
+          description: All balances were updated
 components:
   schemas:
     TimeDeposit:

@@ -6,6 +6,7 @@ import org.ikigaidigital.adapter.rest.api.model.TimeDepositResponse;
 import org.ikigaidigital.adapter.rest.api.model.WithdrawalResponse;
 import org.ikigaidigital.application.ListTimeDeposits;
 import org.ikigaidigital.application.TimeDepositView;
+import org.ikigaidigital.application.UpdateAllBalances;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,9 +15,16 @@ import java.util.List;
 class TimeDepositController implements TimeDepositsApi {
 
     private final ListTimeDeposits listUseCase;
+    private final UpdateAllBalances updateUseCase;
 
-    TimeDepositController(ListTimeDeposits listUseCase) {
+    TimeDepositController(ListTimeDeposits listUseCase, UpdateAllBalances updateUseCase) {
         this.listUseCase = listUseCase;
+        this.updateUseCase = updateUseCase;
+    }
+
+    @Override
+    public void updateAllBalances() {
+        updateUseCase.updateAll();
     }
 
     @Override
