@@ -23,8 +23,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/timedeposit
       SPRING_DATASOURCE_USERNAME: timedeposit
       SPRING_DATASOURCE_PASSWORD: timedeposit
+      SPRING_FLYWAY_LOCATIONS: classpath:db/migration,filesystem:/app/db/seed
     ports:
       - "127.0.0.1:${APP_PORT:-8080}:8080"
+    volumes:
+      - ./java/db/seed:/app/db/seed:ro
     depends_on:
       postgres:
         condition: service_healthy
