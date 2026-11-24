@@ -17,7 +17,7 @@ class ListTimeDepositsTest {
         Withdrawal first = new Withdrawal(10, 1, new BigDecimal("100.00"), LocalDate.of(2026, 1, 15));
         Withdrawal second = new Withdrawal(11, 1, new BigDecimal("50.00"), LocalDate.of(2026, 2, 15));
         ListTimeDeposits listTimeDeposits = new ListTimeDeposits(
-                () -> List.of(new TimeDeposit(1, "basic", 1000.00, 31), new TimeDeposit(2, "premium", 5000.00, 46)),
+                new InMemoryTimeDepositRepository(new TimeDeposit(1, "basic", 1000.00, 31), new TimeDeposit(2, "premium", 5000.00, 46)),
                 () -> List.of(first, second));
 
         assertThat(listTimeDeposits.listAll()).containsExactly(

@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -50,6 +51,23 @@ class JdbcRepositoriesIntegrationTest {
                 .containsExactly(
                         tuple(1, "basic", 1000.00, 31),
                         tuple(2, "gold", 1234567.89, 400));
+    }
+
+    @Test
+    void findsAllForUpdateWithTheSameRowsAsFindAll() {
+        assertThat(timeDeposits.findAllForUpdate())
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactlyElementsOf(timeDeposits.findAll());
+    }
+
+    @Test
+    void updatesBalancesRoundedHalfUpToCents() {
+        timeDeposits.updateBalances(List.of(
+                new TimeDeposit(1, "basic", 1000.9000000000001, 31),
+                new TimeDeposit(2, "gold", 0.125, 400)));
+
+        assertThat(jdbc.sql("SELECT balance FROM time_deposits ORDER BY id").query(BigDecimal.class).list())
+                .containsExactly(new BigDecimal("1000.90"), new BigDecimal("0.13"));
     }
 
     @Test
