@@ -1,3 +1,34 @@
+# XA Bank Time Deposit: Solution
+
+The solution is in [`java/`](java/), built with Spring Boot 4, Java 21 and PostgreSQL. The original assignment is [below](#time-deposit-refactoring-kata---take-home-assignment).
+
+## Run
+
+```bash
+docker compose up -d --build --wait    # app on localhost:8080, with sample data
+cd java && ./mvnw verify               # tests (need Docker)
+```
+
+## Swagger
+
+1. Open <http://localhost:8080/swagger-ui.html>.
+2. Use **Try it out** and then **Execute** on `GET /time-deposits` to list all deposits with their withdrawals.
+3. Do the same on `POST /time-deposits/balance-updates` to add one month of interest to every deposit (it returns `204`).
+4. Run the `GET` again to see the new balances.
+
+## Assumptions
+
+- An unknown plan type earns no interest, as in the original code. Plan names are case-sensitive.
+- Each `POST` adds one month of interest, so calling it twice adds two months. The update does not change `days`.
+- Withdrawals are history only. They do not change the balance or the interest.
+- Balances are stored rounded to the cent. Concurrent updates run one after another, because each one locks the rows it updates.
+
+## AI setup
+
+The solution was built with **Claude Code** (Claude Opus 5.5). [`CLAUDE.md`](CLAUDE.md) holds the project rules. [`.claude/settings.json`](.claude/settings.json) enables three review agents: Java code, architecture, and tests. For each small slice, the agent wrote the code and tests, and the three reviewers checked the diff. AI wrote most of the code and tests. The design decisions and trade-offs were mine.
+
+---
+
 # Time Deposit Refactoring Kata - Take-Home Assignment
 
 ## XA Bank Time Deposit
